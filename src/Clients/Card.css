@@ -1,14 +1,4 @@
-.Card {
-    border-radius: 5px;
-    background-color: #fff;
-    box-shadow: 1px 1px #ababab;
-    min-height: 50px;
-    text-decoration: none;
-    color: inherit;
-}
-
 .Card:hover {
-    color: inherit;
     background-color: #f8f8f8;
 }
 

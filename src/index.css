@@ -4,23 +4,23 @@
   min-height: 100vh;
 }
 
-.Main {
+.container {
   max-width: 800px !important;
 }
 
-.title {
-  margin-bottom: 20px;
-  background-color: #f9f9f9;
+.link-no-decoration {
+  text-decoration: none;
+  color: inherit;
 }
 
-.title > h2 {
-  display: block;
+.link-no-decoration:hover {
+  color: inherit;
 }
 
-.Main .add-client {
-  background-color: green;
-  color: #fff;
-  border: 1px solid black;
+.bhub-card {
   border-radius: 5px;
-  font-weight: bold;
+  background-color: #fff;
+  box-shadow: 1px 1px #dedede;
+  min-height: 50px;
+  padding: 10px;
 }

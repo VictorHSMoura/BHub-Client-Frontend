@@ -7,7 +7,7 @@ interface CardProps {
 
 const Card = ({ index, clientName } : CardProps) => {
     return (
-        <a className="Card d-flex align-items-center" href={`/clients/${index}`}>
+        <a className="Card bhub-card d-flex align-items-center link-no-decoration" href={`/client/${index}`}>
             <div className='d-flex'>
                 <div className='client-id'>{index}</div>
                 <div className='client-name'>{clientName}</div>
