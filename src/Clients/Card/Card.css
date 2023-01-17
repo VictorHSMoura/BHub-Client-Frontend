@@ -1,0 +1,26 @@
+.Card {
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 1px 1px #ababab;
+    min-height: 50px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.Card:hover {
+    color: inherit;
+    background-color: #f8f8f8;
+}
+
+.Card .client-id {
+    display: block;
+    padding-right: 10px;
+    text-align: center;
+    font-size: 1.3rem;
+    min-width: 40px;
+}
+
+.Card .client-name {
+    font-size: 1.3rem;
+    padding-left: 10px;
+}
