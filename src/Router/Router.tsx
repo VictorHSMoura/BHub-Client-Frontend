@@ -9,7 +9,8 @@ const Router = () => {
             <Routes>
                 <Route path="/" element={<Navigate to="/clients" />} />
                 <Route path="/clients" element={<Home />} />
-                <Route path="/client/:client_id" element={<ClientPage />} />
+                <Route path="/new_client" element={<ClientPage readOnly={false}/>} />
+                <Route path="/client/:client_id" element={<ClientPage readOnly={true}/>} />
                 <Route path="/client/:client_id/new_bank" element={<BankDetails readOnly={false} />} />
                 <Route path="/bank/:bank_id" element={<BankDetails readOnly={false}/>} />
                 <Route path="/bank/:bank_id" element={<BankDetails readOnly={false}/>} />

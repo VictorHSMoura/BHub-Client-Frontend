@@ -1,9 +1,12 @@
 import './Home.css';
+
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import { Client } from '../Clients/ClientPage';
+
 import { Container, Row } from 'react-bootstrap';
 import Card from '../Clients/Card';
 import { useEffect, useState } from 'react';
-import { Client } from '../Clients/ClientPage';
-import axios from 'axios';
 import { DB_URL } from '../constants';
 
 function Home() {
@@ -34,7 +37,9 @@ function Home() {
     <Container className='Home p-4'>
       <Row>
         <div className='d-flex justify-content-end p-0 mb-4'>
-          <button type='button' className='btn btn-success float-right'>+ Novo Cliente</button>
+          <Link to="/new_client">
+            <button type='button' className='btn btn-success float-right'>+ Novo Cliente</button>
+          </Link>
         </div>
       </Row>
       {displayClients()}

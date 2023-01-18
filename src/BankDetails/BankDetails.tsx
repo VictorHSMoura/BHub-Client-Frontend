@@ -30,6 +30,20 @@ const BankDetails = ({ readOnly }: BankDetailsProps) => {
         branch: ""
     });
     const [showAlert, setShowAlert] = useState(false);
+    const defaultFailAlert = () => Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'An error occurred! Please try again in a few minutes...',
+        footer: '<a href="">Why do I have this issue?</a>'
+    });
+
+    const defaultSuccessAlert = (text: string) => Swal.fire({
+        position: 'top-end',
+        icon: 'success',
+        title: text,
+        showConfirmButton: false,
+        timer: 1500
+    });
 
     useEffect(() => {
         async function fetchBank() {
@@ -37,12 +51,7 @@ const BankDetails = ({ readOnly }: BankDetailsProps) => {
                 const response = await axios.get(`${DB_URL}/bank_details/${bank_id}`);
                 setBank(response.data);
             } catch {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Something went wrong!',
-                    footer: '<a href="">Why do I have this issue?</a>'
-                })
+                defaultFailAlert();
             }
         }
         if (bank_id) fetchBank();
@@ -52,15 +61,13 @@ const BankDetails = ({ readOnly }: BankDetailsProps) => {
         async function delBank() {
             try {
                 const response = await axios.delete(`${DB_URL}/bank_details/${bank_id}`);
-                if (response.data) navigate(-1);
-                else setShowAlert(true);
+                if (response.data) {
+                    defaultSuccessAlert("Your bank was successful deleted.");
+                    navigate(-1);
+                }
+                else defaultFailAlert();
             } catch {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Something went wrong!',
-                    footer: '<a href="">Why do I have this issue?</a>'
-                })
+                defaultFailAlert();
             }
         }
         delBank();
@@ -69,22 +76,14 @@ const BankDetails = ({ readOnly }: BankDetailsProps) => {
     const addBank = () => {
         async function createBank() {
             try {
-                if (bank) {
-                    const { id, ...new_bank } = bank;
-                    await axios.post(`${DB_URL}/bank_details/client/${client_id}`, new_bank);
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Your bank has been created',
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(() => {
+                const { id, ...new_bank } = bank;
+                await axios.post(`${DB_URL}/bank_details/client/${client_id}`, new_bank);
+                defaultSuccessAlert("Your bank has been created")
+                    .then(() => {
                         navigate(-1)
                     });
-
-                }
             } catch {
-                setShowAlert(true);
+                defaultFailAlert();
             }
         }
         createBank();
@@ -93,26 +92,14 @@ const BankDetails = ({ readOnly }: BankDetailsProps) => {
     const updateBank = () => {
         async function changeBank() {
             try {
-                if (bank) {
-                    const { id, ...new_bank } = bank;
-                    await axios.put(`${DB_URL}/bank_details/${bank_id}`, new_bank);
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Your bank has been updated',
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(() => {
+                const { id, ...new_bank } = bank;
+                await axios.put(`${DB_URL}/bank_details/${bank_id}`, new_bank);
+                defaultSuccessAlert("Your bank has been updated")
+                    .then(() => {
                         navigate(-1)
                     });
-                }
             } catch {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Something went wrong!',
-                    footer: '<a href="">Why do I have this issue?</a>'
-                })
+                defaultFailAlert();
             }
         }
         changeBank();
