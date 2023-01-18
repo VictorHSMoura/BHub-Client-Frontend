@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { useEffect, useState } from "react"
-import { Alert, Button, Container, Form } from "react-bootstrap"
+import { Button, Container, Form } from "react-bootstrap"
 import { useNavigate, useParams } from "react-router";
 import Swal from "sweetalert2";
 import { DB_URL } from "../constants";
@@ -30,7 +30,6 @@ const BankDetails = ({ readOnly }: BankDetailsProps) => {
         account: "",
         branch: ""
     });
-    const [showAlert, setShowAlert] = useState(false);
     const defaultFailAlert = () => Swal.fire({
         icon: 'error',
         title: 'Oops...',
@@ -56,7 +55,7 @@ const BankDetails = ({ readOnly }: BankDetailsProps) => {
             }
         }
         if (bank_id) fetchBank();
-    }, [])
+    }, [bank_id])
 
     const deleteBank = () => {
         async function delBank() {

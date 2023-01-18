@@ -2,8 +2,6 @@ import './App.css'
 
 import Router from './Routes/Router';
 
-import GoBackButton from './Routes/GoBackButton';
-
 function App() {
   return (
     <div className='App'>
