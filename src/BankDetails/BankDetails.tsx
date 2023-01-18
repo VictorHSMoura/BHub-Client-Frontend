@@ -5,7 +5,8 @@ import { useEffect, useState } from "react"
 import { Button, Container, Form } from "react-bootstrap"
 import { useNavigate, useParams } from "react-router";
 import Swal from "sweetalert2";
-import { DB_URL } from "../constants";
+import { DB_URL } from "../Common/constants";
+import { defaultFailAlert, defaultSuccessAlert, failAlertWithErrors } from "../Common/ErrorMessages";
 import GoBackButton from "../Routes/GoBackButton";
 
 interface BankDetailsProps {
@@ -29,29 +30,6 @@ const BankDetails = ({ readOnly }: BankDetailsProps) => {
         bank_name: "",
         account: "",
         branch: ""
-    });
-    const defaultFailAlert = () => Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'An error occurred! Please try again in a few minutes...',
-        footer: '<a href="">Why do I have this issue?</a>'
-    });
-
-    const failAlertWithErrors = (errors: string[]) => Swal.fire({
-        position: 'top-end',
-        icon: 'error',
-        title: "Bad Request",
-        text: errors.join("\n"),
-        showConfirmButton: false,
-        timer: 2500
-    });
-
-    const defaultSuccessAlert = (text: string) => Swal.fire({
-        position: 'top-end',
-        icon: 'success',
-        title: text,
-        showConfirmButton: false,
-        timer: 1500
     });
 
     useEffect(() => {

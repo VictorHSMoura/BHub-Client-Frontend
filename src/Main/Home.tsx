@@ -7,7 +7,7 @@ import { Client } from '../Clients/ClientPage';
 import { Container, Row } from 'react-bootstrap';
 import Card from '../Clients/Card';
 import { useEffect, useState } from 'react';
-import { DB_URL } from '../constants';
+import { DB_URL } from '../Common/constants';
 
 function Home() {
   const [clients, setClients] = useState<Client[]>([]);

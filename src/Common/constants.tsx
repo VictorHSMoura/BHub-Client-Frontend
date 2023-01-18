@@ -1,0 +1,1 @@
+export const DB_URL: string = "https://bhub-api-victor-moura.herokuapp.com";

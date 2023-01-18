@@ -5,9 +5,10 @@ import { faPencil, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Bank } from "../BankDetails/BankDetails";
 import axios from "axios";
-import { DB_URL } from "../constants";
+import { DB_URL } from "../Common/constants";
 import Swal from "sweetalert2";
 import GoBackButton from "../Routes/GoBackButton";
+import { defaultFailAlert, defaultSuccessAlert, failAlertWithErrors } from "../Common/ErrorMessages";
 
 interface Client {
     id?: number,
@@ -35,30 +36,6 @@ const ClientPage = ({ readOnly }: ClientProps) => {
         register_date: new Date(),
         declared_billing: 0,
         bank_details: []
-    });
-
-    const defaultFailAlert = () => Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'An error occurred! Please try again in a few minutes...',
-        footer: '<a href="">Why do I have this issue?</a>'
-    });
-
-    const failAlertWithErrors = (errors: string[]) => Swal.fire({
-        position: 'top-end',
-        icon: 'error',
-        title: "Bad Request",
-        text: errors.join("\n"),
-        showConfirmButton: false,
-        timer: 2500
-    });
-
-    const defaultSuccessAlert = (text: string) => Swal.fire({
-        position: 'top-end',
-        icon: 'success',
-        title: text,
-        showConfirmButton: false,
-        timer: 1500
     });
 
     useEffect(() => {
