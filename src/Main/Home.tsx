@@ -1,18 +1,33 @@
 import './Home.css';
 import { Container, Row } from 'react-bootstrap';
 import Card from '../Clients/Card';
+import { useEffect, useState } from 'react';
+import { Client } from '../Clients/ClientPage';
+import axios from 'axios';
+import { DB_URL } from '../constants';
 
 function Home() {
-  function set10Clients(): JSX.Element[] {
-    let returnDivs: JSX.Element[] = [];
-    for (let index = 1; index <= 10; index++) {
-      returnDivs.push(
-        <Row key={index} className='justify-content-center mb-4'>
-          <Card index={index} clientName={"Client Name"} />
-        </Row>
-      );
+  const [clients, setClients] = useState<Client[]>([]);
+
+  useEffect(() => {
+    async function fetchClients() {
+      let fetchedClients: Client[] = []
+      const response = await axios.get(`${DB_URL}/clients`);
+      response.data.forEach((client: Client) => {
+        fetchedClients.push(client);
+      })
+      setClients(fetchedClients);
     }
-    return returnDivs;
+
+    fetchClients();
+  }, [])
+
+  function displayClients(): JSX.Element[] {
+    return clients.map((client) => (
+      <Row key={client.id} className='justify-content-center mb-4'>
+        <Card index={client.id || 1} clientName={client.corporate_name} />
+      </Row>
+    ))
   }
 
   return (
@@ -22,7 +37,7 @@ function Home() {
           <button type='button' className='btn btn-success float-right'>+ Novo Cliente</button>
         </div>
       </Row>
-      {set10Clients()}
+      {displayClients()}
     </Container>
 
   );

@@ -1,8 +1,11 @@
 // import './BankDetails.css'
 
-import { useState } from "react"
-import { Button, Container, Form } from "react-bootstrap"
+import axios from "axios";
+import { useEffect, useState } from "react"
+import { Alert, Button, Container, Form } from "react-bootstrap"
 import { useNavigate, useParams } from "react-router";
+import Swal from "sweetalert2";
+import { DB_URL } from "../constants";
 
 interface BankDetailsProps {
     readOnly: boolean
@@ -18,19 +21,108 @@ interface Bank {
 const BankDetails = ({ readOnly }: BankDetailsProps) => {
 
     // TODO: if id is not undefined. Load data from DB.
-    const { bank_id } = useParams();
+    const { client_id, bank_id } = useParams();
     const navigate = useNavigate();
 
     const [bank, setBank] = useState<Bank>({
-        id: parseInt(bank_id || ""),
-        bank_name: "ABC",
-        account: "123",
-        branch: "456"
-    })
+        bank_name: "",
+        account: "",
+        branch: ""
+    });
+    const [showAlert, setShowAlert] = useState(false);
+
+    useEffect(() => {
+        async function fetchBank() {
+            try {
+                const response = await axios.get(`${DB_URL}/bank_details/${bank_id}`);
+                setBank(response.data);
+            } catch {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: '<a href="">Why do I have this issue?</a>'
+                })
+            }
+        }
+        if (bank_id) fetchBank();
+    }, [])
+
+    const deleteBank = () => {
+        async function delBank() {
+            try {
+                const response = await axios.delete(`${DB_URL}/bank_details/${bank_id}`);
+                if (response.data) navigate(-1);
+                else setShowAlert(true);
+            } catch {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: '<a href="">Why do I have this issue?</a>'
+                })
+            }
+        }
+        delBank();
+    }
+
+    const addBank = () => {
+        async function createBank() {
+            try {
+                if (bank) {
+                    const { id, ...new_bank } = bank;
+                    await axios.post(`${DB_URL}/bank_details/client/${client_id}`, new_bank);
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Your bank has been created',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        navigate(-1)
+                    });
+
+                }
+            } catch {
+                setShowAlert(true);
+            }
+        }
+        createBank();
+    }
+
+    const updateBank = () => {
+        async function changeBank() {
+            try {
+                if (bank) {
+                    const { id, ...new_bank } = bank;
+                    await axios.put(`${DB_URL}/bank_details/${bank_id}`, new_bank);
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Your bank has been updated',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        navigate(-1)
+                    });
+                }
+            } catch {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: '<a href="">Why do I have this issue?</a>'
+                })
+            }
+        }
+        changeBank();
+    }
 
     return (
         <Container className="BankDetails">
-            <h4>Are you sure you want to delete this bank account?</h4>
+            {readOnly ?
+                <h4>Are you sure you want to delete this bank account?</h4> : ""
+            }
             <div className="bhub-card mb-4">
                 <Form>
                     <fieldset disabled={readOnly}>
@@ -38,29 +130,31 @@ const BankDetails = ({ readOnly }: BankDetailsProps) => {
                             <Form.Label htmlFor="bank-name">Bank Name</Form.Label>
                             <Form.Control id="bank-name" placeholder="Bank Name"
                                 value={bank.bank_name} readOnly={readOnly}
-                                onChange={e => setBank({...bank, bank_name: e.target.value})}/>
+                                onChange={e => setBank({ ...bank, bank_name: e.target.value })} />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label htmlFor="branch">Branch</Form.Label>
                             <Form.Control id="branch" placeholder="Branch"
                                 value={bank.branch} readOnly={readOnly}
-                                onChange={e => setBank({...bank, branch: e.target.value})}/>
+                                onChange={e => setBank({ ...bank, branch: e.target.value })} />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label htmlFor="account">Account</Form.Label>
                             <Form.Control id="account" placeholder="Account"
                                 value={bank.account} readOnly={readOnly}
-                                onChange={e => setBank({...bank, account: e.target.value})}/>
+                                onChange={e => setBank({ ...bank, account: e.target.value })} />
                         </Form.Group>
                     </fieldset>
                     <div className="d-flex justify-content-end">
                         {readOnly ?
                             <Button
                                 className="btn btn-danger me-2"
+                                onClick={() => deleteBank()}
                             >Delete</Button>
                             :
                             <Button
                                 className="btn btn-primary me-2"
+                                onClick={() => bank_id ? updateBank() : addBank()}
                             >Save</Button>
                         }
                         <Button className="btn btn-secondary" onClick={() => navigate(-1)}>Return</Button>
@@ -69,6 +163,7 @@ const BankDetails = ({ readOnly }: BankDetailsProps) => {
             </div>
         </Container>
     )
+
 }
 
 export default BankDetails
