@@ -37,6 +37,15 @@ const BankDetails = ({ readOnly }: BankDetailsProps) => {
         footer: '<a href="">Why do I have this issue?</a>'
     });
 
+    const failAlertWithErrors = (errors: string[]) => Swal.fire({
+        position: 'top-end',
+        icon: 'error',
+        title: "Bad Request",
+        text: errors.join("\n"),
+        showConfirmButton: false,
+        timer: 2500
+    });
+
     const defaultSuccessAlert = (text: string) => Swal.fire({
         position: 'top-end',
         icon: 'success',
@@ -50,8 +59,13 @@ const BankDetails = ({ readOnly }: BankDetailsProps) => {
             try {
                 const response = await axios.get(`${DB_URL}/bank_details/${bank_id}`);
                 setBank(response.data);
-            } catch {
-                defaultFailAlert();
+            } catch (err: any) {
+                if (err.code === "ERR_BAD_REQUEST") {
+                    let errors: string[] = [err.response.data.detail];
+                    failAlertWithErrors(errors).then(() => navigate(-1));
+                } else {
+                    defaultFailAlert();
+                }
             }
         }
         if (bank_id) fetchBank();
@@ -82,8 +96,15 @@ const BankDetails = ({ readOnly }: BankDetailsProps) => {
                     .then(() => {
                         navigate(-1)
                     });
-            } catch {
-                defaultFailAlert();
+            } catch (err: any) {
+                if (err.code === "ERR_BAD_REQUEST") {
+                    failAlertWithErrors(
+                        err.response.data.detail.map(
+                            (detailErr: any) => (detailErr.msg)
+                        ));
+                } else {
+                    defaultFailAlert();
+                }
             }
         }
         createBank();
@@ -98,8 +119,15 @@ const BankDetails = ({ readOnly }: BankDetailsProps) => {
                     .then(() => {
                         navigate(-1)
                     });
-            } catch {
-                defaultFailAlert();
+            } catch (err: any) {
+                if (err.code === "ERR_BAD_REQUEST") {
+                    failAlertWithErrors(
+                        err.response.data.detail.map(
+                            (detailErr: any) => (detailErr.msg)
+                        ));
+                } else {
+                    defaultFailAlert();
+                }
             }
         }
         changeBank();

@@ -44,6 +44,15 @@ const ClientPage = ({ readOnly }: ClientProps) => {
         footer: '<a href="">Why do I have this issue?</a>'
     });
 
+    const failAlertWithErrors = (errors: string[]) => Swal.fire({
+        position: 'top-end',
+        icon: 'error',
+        title: "Bad Request",
+        text: errors.join("\n"),
+        showConfirmButton: false,
+        timer: 2500
+    });
+
     const defaultSuccessAlert = (text: string) => Swal.fire({
         position: 'top-end',
         icon: 'success',
@@ -57,8 +66,13 @@ const ClientPage = ({ readOnly }: ClientProps) => {
             try {
                 const response = await axios.get(`${DB_URL}/clients/${client_id}`);
                 setClient({ ...response.data, register_date: new Date(response.data.register_date) });
-            } catch {
-                defaultFailAlert();
+            } catch (err: any) {
+                if (err.code === "ERR_BAD_REQUEST") {
+                    let errors: string[] = [err.response.data.detail];
+                    failAlertWithErrors(errors).then(() => navigate(-1));
+                } else {
+                    defaultFailAlert();
+                }
             }
         }
         if (client_id) fetchClients();
@@ -74,8 +88,15 @@ const ClientPage = ({ readOnly }: ClientProps) => {
                     .then(() => {
                         navigate(-1)
                     });
-            } catch (err) {
-                defaultFailAlert();
+            } catch (err: any) {
+                if (err.code === "ERR_BAD_REQUEST") {
+                    failAlertWithErrors(
+                        err.response.data.detail.map(
+                            (detailErr: any) => (detailErr.msg)
+                        ));
+                } else {
+                    defaultFailAlert();
+                }
             }
         }
         createClient();
@@ -89,8 +110,15 @@ const ClientPage = ({ readOnly }: ClientProps) => {
                     { ...new_client, register_date: new_client.register_date.toLocaleDateString('pt-br') });
                 defaultSuccessAlert('Your client has been updated')
                     .then(() => setisReadOnly(true));
-            } catch {
-                defaultFailAlert();
+            } catch (err: any) {
+                if (err.code === "ERR_BAD_REQUEST") {
+                    failAlertWithErrors(
+                        err.response.data.detail.map(
+                            (detailErr: any) => (detailErr.msg)
+                        ));
+                } else {
+                    defaultFailAlert();
+                }
             }
         }
         changeClient();
