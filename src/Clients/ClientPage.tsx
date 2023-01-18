@@ -76,6 +76,7 @@ const ClientPage = ({ readOnly }: ClientProps) => {
             }
         }
         if (client_id) fetchClients();
+    // eslint-disable-next-line
     }, [client_id])
 
     const addClient = () => {

@@ -69,6 +69,7 @@ const BankDetails = ({ readOnly }: BankDetailsProps) => {
             }
         }
         if (bank_id) fetchBank();
+    // eslint-disable-next-line
     }, [bank_id])
 
     const deleteBank = () => {
