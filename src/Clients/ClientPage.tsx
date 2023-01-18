@@ -198,10 +198,12 @@ const ClientPage = ({ readOnly }: ClientProps) => {
                                     className="btn btn-success me-2"
                                     onClick={() => client_id ? updateClient() : addClient()}
                                 >Save</Button>
-                                <Button
-                                    className="btn btn-secondary me-2"
-                                    onClick={() => setisReadOnly(true)}
-                                >Close Edit</Button>
+                                { client_id ?
+                                    <Button
+                                        className="btn btn-secondary me-2"
+                                        onClick={() => setisReadOnly(true)}
+                                    >Close Edit</Button> : ""
+                                }
                             </>
                         }
                         {client_id ?
@@ -209,9 +211,7 @@ const ClientPage = ({ readOnly }: ClientProps) => {
                                 onClick={() => deleteClient()}
                             >Delete</Button>
                             :
-                            <Button className="btn btn-secondary"
-                                onClick={() => navigate(-1)}
-                            >Return</Button>
+                            ""
                         }
                     </div>
                 </Form>
