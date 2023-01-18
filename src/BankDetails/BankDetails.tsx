@@ -4,7 +4,6 @@ import axios from "axios";
 import { useEffect, useState } from "react"
 import { Button, Container, Form } from "react-bootstrap"
 import { useNavigate, useParams } from "react-router";
-import Swal from "sweetalert2";
 import { DB_URL } from "../Common/constants";
 import { defaultFailAlert, defaultSuccessAlert, failAlertWithErrors } from "../Common/ErrorMessages";
 import GoBackButton from "../Routes/GoBackButton";

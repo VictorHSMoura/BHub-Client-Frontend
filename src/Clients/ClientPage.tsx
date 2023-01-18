@@ -6,7 +6,6 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Bank } from "../BankDetails/BankDetails";
 import axios from "axios";
 import { DB_URL } from "../Common/constants";
-import Swal from "sweetalert2";
 import GoBackButton from "../Routes/GoBackButton";
 import { defaultFailAlert, defaultSuccessAlert, failAlertWithErrors } from "../Common/ErrorMessages";
 
