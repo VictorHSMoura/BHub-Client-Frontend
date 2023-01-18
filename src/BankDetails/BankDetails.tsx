@@ -6,6 +6,7 @@ import { Alert, Button, Container, Form } from "react-bootstrap"
 import { useNavigate, useParams } from "react-router";
 import Swal from "sweetalert2";
 import { DB_URL } from "../constants";
+import GoBackButton from "../Routes/GoBackButton";
 
 interface BankDetailsProps {
     readOnly: boolean
@@ -62,8 +63,8 @@ const BankDetails = ({ readOnly }: BankDetailsProps) => {
             try {
                 const response = await axios.delete(`${DB_URL}/bank_details/${bank_id}`);
                 if (response.data) {
-                    defaultSuccessAlert("Your bank was successful deleted.");
-                    navigate(-1);
+                    defaultSuccessAlert("Your bank has been deleted succe.")
+                        .then(() => navigate(-1));
                 }
                 else defaultFailAlert();
             } catch {
@@ -107,6 +108,7 @@ const BankDetails = ({ readOnly }: BankDetailsProps) => {
 
     return (
         <Container className="BankDetails">
+            <GoBackButton />
             {readOnly ?
                 <h4>Are you sure you want to delete this bank account?</h4> : ""
             }
@@ -144,7 +146,6 @@ const BankDetails = ({ readOnly }: BankDetailsProps) => {
                                 onClick={() => bank_id ? updateBank() : addBank()}
                             >Save</Button>
                         }
-                        <Button className="btn btn-secondary" onClick={() => navigate(-1)}>Return</Button>
                     </div>
                 </Form>
             </div>

@@ -1,4 +1,4 @@
-const DB_URL: string = "http://localhost:8000"
+const DB_URL: string = "https://bhub-api-victor-moura.herokuapp.com"
 
 export {
     DB_URL

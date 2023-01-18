@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Alert, Button, Container, Form } from "react-bootstrap"
+import { Button, Container, Form } from "react-bootstrap"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencil, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { Bank } from "../BankDetails/BankDetails";
 import axios from "axios";
 import { DB_URL } from "../constants";
 import Swal from "sweetalert2";
+import GoBackButton from "../Routes/GoBackButton";
 
 interface Client {
     id?: number,
@@ -22,7 +23,7 @@ interface ClientProps {
     readOnly: boolean
 }
 
-const ClientPage = ({readOnly} : ClientProps) => {
+const ClientPage = ({ readOnly }: ClientProps) => {
     const [isReadOnly, setisReadOnly] = useState(readOnly);
     const navigate = useNavigate();
 
@@ -35,7 +36,6 @@ const ClientPage = ({readOnly} : ClientProps) => {
         declared_billing: 0,
         bank_details: []
     });
-    const [showAlert, setShowAlert] = useState(false);
 
     const defaultFailAlert = () => Swal.fire({
         icon: 'error',
@@ -62,7 +62,7 @@ const ClientPage = ({readOnly} : ClientProps) => {
             }
         }
         if (client_id) fetchClients();
-    }, [])
+    }, [client_id])
 
     const addClient = () => {
         async function createClient() {
@@ -74,7 +74,7 @@ const ClientPage = ({readOnly} : ClientProps) => {
                     .then(() => {
                         navigate(-1)
                     });
-            } catch {
+            } catch (err) {
                 defaultFailAlert();
             }
         }
@@ -100,8 +100,10 @@ const ClientPage = ({readOnly} : ClientProps) => {
         async function delClient() {
             try {
                 const response = await axios.delete(`${DB_URL}/clients/${client_id}`);
-                if (response.data)
-                    navigate("/clients");
+                if (response.data) {
+                    defaultSuccessAlert('Your client has been deleted successfully!')
+                        .then(() => navigate("/clients"));
+                }
                 else
                     defaultFailAlert();
             } catch {
@@ -144,6 +146,7 @@ const ClientPage = ({readOnly} : ClientProps) => {
 
     return (
         <Container className="ClientPage">
+            <GoBackButton />
             <div className="bhub-card mb-4">
                 <Form>
                     <fieldset disabled={isReadOnly}>
@@ -185,12 +188,18 @@ const ClientPage = ({readOnly} : ClientProps) => {
                                 onClick={() => setisReadOnly(false)}
                             >Edit</Button>
                             :
-                            <Button
-                                className="btn btn-success me-2"
-                                onClick={() => client_id ? updateClient() : addClient()}
-                            >Save</Button>
+                            <>
+                                <Button
+                                    className="btn btn-success me-2"
+                                    onClick={() => client_id ? updateClient() : addClient()}
+                                >Save</Button>
+                                <Button
+                                    className="btn btn-secondary me-2"
+                                    onClick={() => setisReadOnly(true)}
+                                >Close Edit</Button>
+                            </>
                         }
-                        { client_id ?
+                        {client_id ?
                             <Button className="btn btn-danger"
                                 onClick={() => deleteClient()}
                             >Delete</Button>
@@ -204,14 +213,14 @@ const ClientPage = ({readOnly} : ClientProps) => {
             </div>
             {client_id ?
                 <>
-                <div className="d-flex justify-content-between mb-2">
-                    <h3>Bank Details</h3>
-                    <Button
-                        className="btn btn-primary"
-                        onClick={_ => navigate("new_bank")}
-                    >+ New Bank</Button>
-                </div>
-                {bankDetails(client.bank_details)}
+                    <div className="d-flex justify-content-between mb-2">
+                        <h3>Bank Details</h3>
+                        <Button
+                            className="btn btn-primary"
+                            onClick={_ => navigate("new_bank")}
+                        >+ New Bank</Button>
+                    </div>
+                    {bankDetails(client.bank_details)}
                 </>
                 : ""
             }
