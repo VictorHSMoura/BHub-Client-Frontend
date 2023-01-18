@@ -18,3 +18,7 @@ Após instalar os pacotes, basta executar o frontend por meio do seguinte comand
 Com isso, o acesso podera ser feito por `localhost:3000`.
 
 **OBS.:** Lembre-se de rodar o projeto do backend em conjunto, presente no seguinte [link](https://github.com/VictorHSMoura/BHub-Client-API).
+
+## Deploy
+
+O Frontend também está disponível na seguinte URL: https://bhub-frontend-victor-moura.netlify.app
